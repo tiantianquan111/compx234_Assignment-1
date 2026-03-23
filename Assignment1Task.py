@@ -27,6 +27,10 @@ class Assignment1:
             t=self.machineThread(i,self)
             self.mThreads.append(t)
 
+        for i in range(self.NUM_PRINTERS):
+            t=self.printerThread(i,self)
+            self.pThreads.append(t)
+
        
             
         # Start all the threads
