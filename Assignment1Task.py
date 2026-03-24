@@ -37,7 +37,7 @@ class Assignment1:
         for machine in self.mThreads:
             machine.start()
 
-        for printer in self.pThread:
+        for printer in self.pThreads:
             printer.start()
 
         # Let the simulation run for some time
