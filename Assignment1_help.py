@@ -129,8 +129,6 @@ class Assignment1:
             except Exception as ex:
                 print("Sempaphore acquisation interrupted:", ex)
 
-            
-            
             # Acquire binary semaphore for mutual exclusion of the print queue
             self.outer.binary.acquire()
 

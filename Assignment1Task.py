@@ -122,11 +122,11 @@ class Assignment1:
             print(f"Machine {id} Checking availability")
             # Acquire counting semaphore (wait for an available printer)
             try:
-                self.outer.sempahore.acquire()
+               self.outer.semaphore.acquire()
             except Exception as ex:
                 print("Sempaphore acquisation interrupted:", ex)
         
-        # Acquire binary semaphore for mutual exclusion of the print queue
+            # Acquire binary semaphore for mutual exclusion of the print queue
             self.outer.binary.acquire()
 
             # Both semaphores acquired
@@ -139,4 +139,7 @@ class Assignment1:
             # Insert it in the print queue
             self.outer.print_list.queueInsert(doc)
 
-            
+        def postRequest(self, id):
+            print(f"Machine {id} Releasing binary semaphore")
+            # Release the binary semaphore
+            self.outer.binary.release()
