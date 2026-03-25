@@ -55,13 +55,13 @@ class Assignment1:
 
         # Wait until all printer threads finish by joining them
         # Write code here
-        for printer in self.pThreats:
+        for printer in self.pThreads:
             printer.join()
 
-        for machine in self.mThreads:
-            machine.join()
 
+        print("Simulation finished.")
 
+       
     # Printer class
     class printerThread(threading.Thread):
         def __init__(self, printerID, outer):
@@ -83,6 +83,8 @@ class Assignment1:
 
         def printDox(self, printerID):
             print(f"Printer ID: {printerID} : now available")
+            
+            self.outer.binary.acquire()
             # Print from the queue
             self.outer.print_list.queuePrint(printerID)
 
