@@ -1,7 +1,6 @@
 import threading
 import time
 import random
-import multiprocessing
 
 from printDoc import printDoc
 from printList import printList
@@ -20,11 +19,13 @@ class Assignment1:
         self.print_list = printList()  # Create an empty list of print requests
         self.mThreads = []             # list for machine threads
         self.pThreads = []             # list for printer threads
-        self.queue_lock = multiprocessing.Lock()
-        self.not_full = multiprocessing.Condition(self.queue_lock)
-        self.not_empty = multiprocessing.Condition(self.queue_lock)
-        self.queue_capacity = self.NUM_PRINTERS
 
+        #Create semaphores
+        self.semaphore = threading.Semaphore(self.NUM_PRINTERS)  # counting semaphore
+        self.binary = threading.Semaphore(1)
+
+        self.outer.binary.acquire()
+        self.outer.binary.release()
 
     def startSimulation(self):
         # Create Machine and Printer threads
