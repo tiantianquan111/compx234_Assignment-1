@@ -24,12 +24,25 @@ class Assignment1:
         self.semaphore = threading.Semaphore(self.NUM_PRINTERS)  # counting semaphore
         self.binary = threading.Semaphore(1)
 
+        self.outer.binary.acquire()
+        self.outer.binary.release()
+
     def startSimulation(self):
         # Create Machine and Printer threads
-        # Write code here
+        for i in range(self.NUM_MACHINES):
+            t=self.machineThread(i,self)
+            self.mThreads.append(t)
+
+        for i in range(self.NUM_PRINTERS):
+            t=self.printerThread(i,self)
+            self.pThreads.append(t)
 
         # Start all the threads
-        # Write code here
+        for machine in self.mThreads:
+            machine.start()
+
+        for printer in self.pThreads:
+            printer.start()
 
         # Let the simulation run for some time
         time.sleep(self.SIMULATION_TIME)
@@ -38,7 +51,10 @@ class Assignment1:
         self.sim_active = False
 
         # Wait until all printer threads finish by joining them
-        # Write code here
+        for printer in self.pThreats:
+            printer.join()
+        
+
 
         print("Simulation finished.")
         # We won't join machine threads as they may be in busy waiting.
@@ -57,6 +73,7 @@ class Assignment1:
                 self.printerSleep()
                 # Grab the request at the head of the queue and print it
                 # Write code here
+                self.printDox(self.printerID)
                 
 
         def printerSleep(self):
@@ -68,11 +85,14 @@ class Assignment1:
             #Write code here for Binary and counting Semaphore
             # Acquire the binary semaphore to ensure mutual exclusion
 
+            self.outer.binary.acquire()
+
             # Print from the queue
             self.outer.print_list.queuePrint(printerID)
             # Release the binary semaphore
-           
+            self.outer.binary.release()
             # Increment the semaphore count so that machines can send requests
+            self.outer.semaphore.release()
 
 
     # Machine class
@@ -104,8 +124,15 @@ class Assignment1:
         def isRequestSafe(self, id):
             print(f"Machine {id} Checking availability")
             # Acquire counting semaphore (wait for an available printer)
+            try:
+                self.outer.sempahore.acquire()
+            except Exception as ex:
+                print("Sempaphore acquisation interrupted:", ex)
+
+            
             
             # Acquire binary semaphore for mutual exclusion of the print queue
+            self.outer.binary.acquire()
 
             # Both semaphores acquired
             print(f"Machine {id} will proceed")
